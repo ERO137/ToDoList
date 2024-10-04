@@ -36,14 +36,13 @@ def main():
             save_task_list(to_do)
             print("\nHave a good day!\n")
             break
-    
+
 
 def open_file():
     with open(csv_file, "r") as list_file:
         reader = csv.DictReader(list_file)
         for row in reader:
-            to_do.append(row)            
-    return to_do
+            to_do.append(row)
 
 
 def menu():
@@ -131,21 +130,37 @@ def save_task_list(my_list):
     pdf(to_do)
 
 
+
 def pdf(my_list):
     class PDF(FPDF):
         def __init__(self):
             super().__init__()
 
-        def header_pdf(self, title):
+        def title_pdf(self, title):
             # Title
-            self.set_font("Arial", "", 40)
+            self.set_font("Arial", "", 50)
+            self.set_text_color(0, 0, 128)
             self.cell(197, 60, f"{title}", align="C")
             self.ln(30)
 
+        def header_list(self, text):
+            self.set_font("Helvetica", "B", 24)
+            self.set_text_color(255, 0, 0)
+            self.cell(40)
+            self.cell(150, 50, f"{text}", align="")
+            self.ln(18)
+
         def line_1(self, text):
-            self.set_font("Helvetica", "B", 10)
-            self.set_text_color(0,0,0)
-            self.cell(197, 50, f"{text}", align="C") 
+            self.set_font("Helvetica", "B", 20)
+            self.set_text_color(0, 0, 0)
+            self.cell(30)
+            self.cell(150, 50, f"{text}", align="")
+
+        def footer(self):
+            self.set_font("helvetica", "I", 10)
+            self.set_text_color(0, 0, 0)
+            self.cell(197, 15, f"Last Update {date_now}", align="C")
+    
 
         def break_line(self, line):
             self.ln(line)
@@ -156,17 +171,22 @@ def pdf(my_list):
     pdf = PDF()
     pdf.add_page()
 
-    pdf.header_pdf("+++ To DO List +++")
+    pdf.title_pdf("+++ To DO List +++")
 
+    pdf.header_list("Tasks")
+    
     for i in range(list_size):
-        pdf.line_1(f"Item {i + 1} - {my_list[i]}")
-        pdf.break_line(8)
-
-    pdf.break_line(5)
-
+        pdf.line_1(f" - {my_list[i]['task']} at {my_list[i]['time']} -")
+        #pdf.line_2(tabulate(f"{my_list[i]['created']}"))
+        pdf.break_line(10)
+    
+    pdf.break_line(30)
+    pdf.footer()
+    
     pdf.output("outputs/test.pdf")
 
-    print("PDF created successfully")
+    print("\nPDF created successfully")
+    print(date_now)
 
 
 
