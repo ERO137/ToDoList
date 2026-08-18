@@ -7,6 +7,7 @@ from fpdf import FPDF
 # Date right now
 date = datetime.now()
 date_now = (date.strftime("%y-%m-%d %H:%M:%S"))
+date_file = (date.strftime("%y%m%d-%H%M%S"))
 
 
 to_do = []
@@ -182,11 +183,10 @@ def pdf(my_list):
     pdf.break_line(30)
     pdf.footer()
     
-    pdf.output("outputs/test.pdf")
+    pdf.output(f"outputs/To_do_List {date_file}.pdf")
 
     print("\nPDF created successfully")
     print(date_now)
-
 
 
 
